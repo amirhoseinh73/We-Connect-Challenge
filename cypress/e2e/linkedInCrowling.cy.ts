@@ -1,23 +1,55 @@
-describe("Linked-In Crowling", function () {
-    it("Login and check profile URLs", function () {
-        // Step 1: Read Users List
-        // const URLs = await getProfileURLs()
-        // console.log(URLs)
+import { isValidHttpUrl } from "../../src/helpers/global"
+import { MESSAGES, MESSAGE_FILENAME, PROFILE_URL_FILENAME } from "./config"
+import { loginToLinkedIn } from "./login"
+import { convertStrToArr, readCsvCypress, writeResults } from "./fileHandler"
+import { checkNewConnection, checkValidProfile, sendConnectionRequest } from "./validationHandler"
 
+describe("Linked-In Crowling", () => {
+    let invitationMessage = "default invitation message"
+    const profilesURL: string[] = []
+
+    // Step 1: Read Users List && custom message
+    before(() => {
+        cy.readFile(MESSAGE_FILENAME).then((str: string) => (invitationMessage = str))
+
+        cy.readFile(PROFILE_URL_FILENAME)
+            .then((str: string) => convertStrToArr(str))
+            .then(rows => readCsvCypress(rows))
+            .each((url: string[]) => profilesURL.push(url[0]))
+    })
+
+    it("Login and check profile URLs", async () => {
         //Step 2: login to Linked In
-        cy.visit("http://www.linkedin.com/login")
-
-        const email = Cypress.env("EMAIL")
-        const password = Cypress.env("PASSWORD")
-
-        cy.get("#username").type(email)
-        cy.get("#password").type(password)
-
-        cy.get("button[type='submit']").click()
+        loginToLinkedIn()
 
         //Step 3:
-        cy.visit("http://www.linkedin.com/profile1")
-        // if (cy.get("h1")) finds page
-        // else could not find page
+        const errors: string[] = []
+        const completed: string[] = []
+        for (const url of profilesURL) {
+            if (!isValidHttpUrl(url)) {
+                errors.push(MESSAGES.invalidURL)
+                continue
+            }
+
+            cy.visit(url)
+
+            const isValidProfile = await checkValidProfile()
+            cy.log("profile404", isValidProfile)
+            if (!isValidProfile) {
+                errors.push(MESSAGES.invalidProfile)
+                continue
+            }
+
+            const isNewConnection = await checkNewConnection()
+            if (!isNewConnection) {
+                errors.push(MESSAGES.oldConnection)
+                continue
+            }
+
+            await sendConnectionRequest(invitationMessage)
+            completed.push(url)
+        }
+
+        writeResults(completed, errors)
     })
 })

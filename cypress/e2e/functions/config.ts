@@ -7,3 +7,5 @@ export enum MESSAGES {
     invalidProfile = "Invalid Profile",
     oldConnection = "Already Connected",
 }
+
+export const DEF_INVITE_MESSAGE = "default invitation message"

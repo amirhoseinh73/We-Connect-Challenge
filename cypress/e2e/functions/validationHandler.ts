@@ -1,3 +1,13 @@
+export const isValidHttpUrl = function (str: string) {
+    try {
+        const url = new URL(str)
+
+        return url.protocol === "http:" || url.protocol === "https:"
+    } catch (_) {
+        return false
+    }
+}
+
 export const checkValidProfile = function () {
     return new Cypress.Promise<boolean>(resolve => {
         cy.get("body").then(body => {
@@ -31,7 +41,7 @@ export const checkNewConnection = function () {
 export const sendConnectionRequest = function (invitationMessage: string) {
     return new Cypress.Promise(resolve => {
         cy.get("div.pvs-profile-actions [aria-label^='Invite']")
-            .click()
+            .click({ force: true })
             .then(() => {
                 cy.get("button[aria-label='Add a note']")
                     .click()

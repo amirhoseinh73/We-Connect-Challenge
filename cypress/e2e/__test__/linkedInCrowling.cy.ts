@@ -1,11 +1,20 @@
-import { isValidHttpUrl } from "../../src/helpers/global"
-import { MESSAGES, MESSAGE_FILENAME, PROFILE_URL_FILENAME } from "./config"
-import { loginToLinkedIn } from "./login"
-import { convertStrToArr, readCsvCypress, writeResults } from "./fileHandler"
-import { checkNewConnection, checkValidProfile, sendConnectionRequest } from "./validationHandler"
+import { isValidHttpUrl } from "../functions/validationHandler"
+import {
+    DEF_INVITE_MESSAGE,
+    MESSAGES,
+    MESSAGE_FILENAME,
+    PROFILE_URL_FILENAME,
+} from "../functions/config"
+import { loginToLinkedIn } from "../functions/login"
+import { convertStrToArr, readCsvCypress, writeResults } from "../functions/fileHandler"
+import {
+    checkNewConnection,
+    checkValidProfile,
+    sendConnectionRequest,
+} from "../functions/validationHandler"
 
 describe("Linked-In Crowling", () => {
-    let invitationMessage = "default invitation message"
+    let invitationMessage = DEF_INVITE_MESSAGE
     const profilesURL: string[] = []
 
     // Step 1: Read Users List && custom message
@@ -18,7 +27,7 @@ describe("Linked-In Crowling", () => {
             .each((url: string[]) => profilesURL.push(url[0]))
     })
 
-    it("Login and check profile URLs", async () => {
+    it("Login and send invitaion", async () => {
         //Step 2: login to Linked In
         loginToLinkedIn()
 

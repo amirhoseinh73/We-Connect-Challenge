@@ -1,5 +1,23 @@
 # We-Conect Challenge
 
+## Run
+
+```
+npm install
+```
+
+Cypress open
+
+```
+npm run cy:o
+```
+
+Cypress run:
+
+```
+npm run cy:r
+```
+
 ## Solution
 
 Choose some linkedIn profiles, wrong profiles URL, and wrong URLs.

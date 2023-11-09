@@ -1,22 +1,23 @@
 # We-Conect Challenge
 
-## Run
+## Run Test
 
-```
-npm install
-```
+-   Install:
 
-Cypress open
+    ```
+    npm install
+    ```
 
-```
-npm run cy:o
-```
+-   Cypress open
 
-Cypress run:
+    ```
+    npm run cy:o
+    ```
 
-```
-npm run cy:r
-```
+-   Cypress run:
+    ```
+    npm run cy:r
+    ```
 
 ## Solution
 
